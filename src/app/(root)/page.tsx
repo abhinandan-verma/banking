@@ -1,13 +1,16 @@
 import HeaderBox from '@/components/HeaderBox'
 import RightSideBar from '@/components/RightSideBar'
 import TotalBalanceBox from '@/components/TotalBalanceBox'
+import { getLoggedInUser } from '@/lib/actions/user.actions'
+import { redirect, } from 'next/navigation'
 import React from 'react'
 
-const Home = () => {
-    const loggedInUser = {
-        firstName: "Abhinandan",
-        lastName: "Verma",
-        email: "a@gmail.com"
+const Home = async() => {
+    const loggedInUser = await getLoggedInUser()
+    console.log("loggedInUser: "+loggedInUser)
+
+    if(!loggedInUser){
+        redirect('/sign-in')
     }
 
   return (

@@ -15,12 +15,13 @@ import Link from 'next/link'
 import { sidebarLinks } from '@/constants'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import Footer from './Footer'
   
 
-function MobileNav() {
+function MobileNav({ user }: MobileNavProps) {
 
     const pathName = usePathname()
-
+ 
   return (
    <section className='w-full max-w-[264px]'>
         <Sheet>
@@ -34,8 +35,9 @@ function MobileNav() {
                 />
             </SheetTrigger>
             <SheetContent className='bg-white bg-opacity-95 border-none'>
+                
                 <nav className='flex flex-col gap-4'>
-                <Link href="/" className='mb-4 cursor-pointer items-center gap-2 flex'>
+                <Link href="/" className='cursor-pointer items-center gap-2 flex'>
                     <Image
                         src="/icons/logo.svg"
                         alt='logo'
@@ -47,10 +49,10 @@ function MobileNav() {
                         SBI
                     </h1>
                 </Link>
-
+                
                 <div className='mobilenav-sheet'>
                     <SheetClose asChild>
-                        <nav className='flex h-full flex-col gap-6 pt-12 text-white'>
+                        <nav className='flex  flex-col gap-6 pt-12 text-white'>
                             {sidebarLinks.map((item) => {
                                 const isActive = pathName === item.route || pathName.startsWith(`${item.route}/`)
 
@@ -70,15 +72,16 @@ function MobileNav() {
                                                     {item.label}
                                             </p>
                                         </Link>
+
                                     </SheetClose>
                                 )
                             })}
-                            USER
+                             <Footer user={user} type="mobile"/>
                         </nav>
                     </SheetClose>
                 </div>
-                FOOTER
                 </nav>
+            
             </SheetContent>
         </Sheet>
 

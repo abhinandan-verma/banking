@@ -19,7 +19,7 @@ interface CustomInput {
     name: FieldPath<z.infer<typeof formSchema>>,
     label: string,
     placeholder: string,
-    description: string | undefined
+    description?: string | undefined
 }
 
 

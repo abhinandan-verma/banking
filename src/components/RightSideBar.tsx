@@ -6,17 +6,23 @@ import BankCard from './BankCard'
 function RightSideBar({
     user, transactions, banks
 }: RightSidebarProps) {
+
+    if(!user){
+        console.log("user is null")
+        return null
+    }
+
   return (
     <aside className='right-sidebar'>
         <section className='flex flex-col pb-8'>
             <div className='profile-banner'/>
             <div className='profile'>
                 <div className='profile-img'>
-                    <span className='text-blue-500 text-5xl font-bold font-ibm-plex-serif'>{user.firstName[0]}</span>
+                    <span className='text-blue-500 text-5xl font-bold font-ibm-plex-serif'>{user.name ? user.name[0] : "*"}</span>
                 </div>
                 <div className='profile-details'>
                     <h1 className='profile-name'>
-                        {user.firstName} {user.lastName}
+                        {user.name}
                     </h1>
                     <p className='profile-email'>
                         {user.email}
@@ -47,7 +53,7 @@ function RightSideBar({
                         <BankCard
                             key={banks[0].$id}
                             account={banks[0]}
-                            userName={`${user.firstName} ${user.lastName}`}
+                            userName={`${user.name}`}
                             showBalance={false}
                         />
                     </div>
@@ -56,7 +62,7 @@ function RightSideBar({
                             <BankCard
                                 key={banks[1].$id}
                                 account={banks[1]}
-                                userName={`${user.firstName} ${user.lastName}`}
+                                userName={`${user.name}`}
                                 showBalance={false}
                             />
                         </div>

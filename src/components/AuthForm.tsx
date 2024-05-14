@@ -21,11 +21,17 @@ import { Input } from "@/components/ui/input"
 import { Divide, Loader2 } from 'lucide-react'
 import CustomInput from './CustomInput'
 import { authFormSchema} from '@/lib/utils'
+import { sign } from 'crypto'
+import { useRouter } from 'next/navigation'
+import { getLoggedInUser, signIn, signUp } from '@/lib/actions/user.actions'
 
 
 function AuthForm({type}: {type: string}) {
+
+  const router = useRouter()
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(false)
+  
 
    // 1. Define your form.
    const formSchema = authFormSchema(type)
@@ -38,12 +44,39 @@ function AuthForm({type}: {type: string}) {
   })
  
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     setLoading(true)
     console.log(values)
-    setLoading(false)
+    
+    try{
+        // sig-up with appwrite
+        if(type === "sign-up"){
+            const newUser = await signUp(values)
+
+            if(newUser){
+                setUser(newUser)
+            }
+        }
+
+        // sign-in with appwrite
+        if(type === "sign-in"){
+            const response = await signIn({
+                email: values.email,
+                password: values.password
+            })
+
+            if(response){
+               router.push('/')
+            }
+        }
+
+    }catch(error){
+        console.log(error)
+    }finally{
+        setLoading(false)
+    }
   }
 
 
@@ -70,6 +103,13 @@ function AuthForm({type}: {type: string}) {
                             ? "Link your account to get started"
                             : "Please enter your details"}
                         </p>
+                        <p>
+                            {user
+                            ? "User Found"
+                            : "User Not Found"
+                            }
+                        </p>
+                        
                     </h1>
                 </div>        
         </header>
@@ -90,14 +130,14 @@ function AuthForm({type}: {type: string}) {
                                     label='First Name'
                                     control={form.control}
                                     placeholder='Abhishek'
-                                    description='This is the firstName field'
+                                    
                                     />
                                     <CustomInput
                                     name='lastName'
                                     label='Last Name'
                                     control={form.control}
                                     placeholder='abhi'
-                                    description='This is the Last Name field'
+                                    
                                     />
                                 </div>
                                 
@@ -106,7 +146,15 @@ function AuthForm({type}: {type: string}) {
                                 label="Address"
                                 control={form.control}
                                 placeholder="Enter your address"
-                                description="This is the address field"
+                                
+                                />
+
+                                <CustomInput
+                                name="city"
+                                label="City"
+                                control={form.control}
+                                placeholder="Enter your city"
+                                
                                 />
 
                                 <div className='flex gap-4'>
